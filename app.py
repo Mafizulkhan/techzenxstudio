@@ -17,7 +17,7 @@ import os
 import re
 from datetime import datetime
 from pathlib import Path
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 
 import config
 from package_parser import parse_markdown_package, render_package_markdown
@@ -25,6 +25,12 @@ from utils import setup_logger, load_json
 
 logger = setup_logger("app")
 app = Flask(__name__, template_folder="templates", static_folder="static")
+
+
+@app.route("/static/<path:filename>")
+def serve_static(filename):
+    """Explicit static file server for Vercel deployment."""
+    return send_from_directory(os.path.join(app.root_path, "static"), filename)
 
 
 def get_latest_run_date() -> str | None:
