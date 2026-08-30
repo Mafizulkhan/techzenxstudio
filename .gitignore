@@ -1,12 +1,11 @@
 # Secrets — NEVER commit
 .env
 
-# Generated output
+# Generated output (temp data only — keep runs & candidates for deployment)
 output/trends/
 output/scripts/
 output/shotlists/
 output/audio/
-output/runs/
 
 # Python
 __pycache__/
