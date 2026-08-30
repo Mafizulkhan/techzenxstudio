@@ -244,8 +244,11 @@ def chat():
     if not user_msg:
         return jsonify({"error": "Empty message"}), 400
 
-    clean_msg = user_msg.encode('ascii', 'ignore').decode('ascii').strip() or "user_query"
-    logger.info("Received chat query: '%s'", clean_msg)
+    try:
+        clean_msg = user_msg.encode('ascii', 'ignore').decode('ascii').strip() or "user_query"
+        logger.info("Received chat query: '%s'", clean_msg)
+    except Exception:
+        pass
 
     # 1. If Anthropic API key is available, call Claude with full assistant system prompt
     if config.ANTHROPIC_API_KEY:
@@ -287,7 +290,10 @@ Instructions:
             return jsonify({"reply": reply, "updated_package": updated_pkg})
 
         except Exception as err:
-            logger.exception("Claude API chat error: %s", err)
+            try:
+                logger.warning("Claude API chat fallback: %s", str(err))
+            except Exception:
+                pass
 
     # 2. Comprehensive rule-based response engine for general tech, AI, space, robotics, facts & package edits
     reply, updated_pkg = _apply_comprehensive_tech_assistant(user_msg, current_pkg)

@@ -1382,7 +1382,8 @@
         });
         const data = await res.json();
         
-        botMsgEl.innerText = data.reply || 'Here is your response.';
+        const formattedReply = formatBotReply(data.reply || 'Here is your response.');
+        botMsgEl.innerHTML = formattedReply;
         if (data.updated_package) {
           currentPackage = data.updated_package;
           renderPackageUI(currentPackage);
@@ -1393,11 +1394,25 @@
       }
     }
 
+    function formatBotReply(text) {
+      if (!text) return 'Here is your response.';
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\n/g, "<br>");
+    }
+
     function appendMessage(text, sender) {
       const msgs = document.getElementById('chatMessages');
       const el = document.createElement('div');
       el.className = `msg msg-${sender}`;
-      el.innerText = text;
+      if (sender === 'user') {
+        el.innerText = text;
+      } else {
+        el.innerHTML = formatBotReply(text);
+      }
       msgs.appendChild(el);
       msgs.scrollTop = msgs.scrollHeight;
       return el;

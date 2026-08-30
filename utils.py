@@ -38,7 +38,13 @@ def setup_logger(name: str, log_to_file: bool = True) -> logging.Logger:
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    # Console handler (INFO+)
+    # Console handler (INFO+) — guarded for UTF-8 unicode/emojis
+    try:
+        if hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
     console = logging.StreamHandler(sys.stdout)
     console.setLevel(logging.INFO)
     console.setFormatter(formatter)
