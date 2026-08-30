@@ -43,6 +43,8 @@ def get_latest_run_date() -> str | None:
 
 
 @app.route("/")
+@app.route("/index.py")
+@app.route("/api/index.py")
 def index():
     """Render the main Studio Dashboard."""
     return render_template("index.html")
