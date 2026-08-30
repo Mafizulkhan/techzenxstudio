@@ -9,6 +9,9 @@ praw>=7.7.0                # Reddit API wrapper
 feedparser>=6.0.0          # RSS feed parsing
 requests>=2.31.0           # HTTP requests
 
+# Web Framework
+flask>=3.0.0               # Flask web server
+
 # Text-to-Speech
 elevenlabs>=1.0.0          # ElevenLabs TTS API
 

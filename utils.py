@@ -8,6 +8,7 @@ used by all modules.
 import json
 import logging
 import sys
+import os
 from datetime import datetime
 from pathlib import Path
 
@@ -20,7 +21,7 @@ def setup_logger(name: str, log_to_file: bool = True) -> logging.Logger:
 
     Args:
         name: Logger name (typically __name__ of the calling module).
-        log_to_file: If True, also writes to logs/<name>.log.
+        log_to_file: If True, also writes to /tmp/logs/<name>.log.
 
     Returns:
         Configured logging.Logger instance.
@@ -43,16 +44,19 @@ def setup_logger(name: str, log_to_file: bool = True) -> logging.Logger:
     console.setFormatter(formatter)
     logger.addHandler(console)
 
-    # File handler (DEBUG+)
+    # File handler (DEBUG+) — wrapped in try/except for read-only filesystems (Vercel)
     if log_to_file:
-        log_dir = config.PROJECT_ROOT / "logs"
-        log_dir.mkdir(exist_ok=True)
-        file_handler = logging.FileHandler(
-            log_dir / f"{name}.log", encoding="utf-8"
-        )
-        file_handler.setLevel(logging.DEBUG)
-        file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
+        try:
+            log_dir = Path("/tmp/logs")
+            log_dir.mkdir(parents=True, exist_ok=True)
+            file_handler = logging.FileHandler(
+                log_dir / f"{name}.log", encoding="utf-8"
+            )
+            file_handler.setLevel(logging.DEBUG)
+            file_handler.setFormatter(formatter)
+            logger.addHandler(file_handler)
+        except OSError:
+            pass  # Fall back to console-only on read-only filesystems
 
     return logger
 
@@ -69,9 +73,12 @@ def save_json(data, filepath: Path | str) -> Path:
         The resolved Path where the file was saved.
     """
     filepath = Path(filepath)
-    filepath.parent.mkdir(parents=True, exist_ok=True)
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    try:
+        filepath.parent.mkdir(parents=True, exist_ok=True)
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+    except OSError:
+        pass  # Silently skip on read-only filesystems (Vercel)
     return filepath
 
 
@@ -140,7 +147,10 @@ def ensure_output_dirs() -> None:
         config.RUNS_DIR,
     ]
     for d in dirs:
-        d.mkdir(parents=True, exist_ok=True)
+        try:
+            d.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            pass  # Skip on read-only filesystems (Vercel)
 
 
 def get_run_dir() -> Path:
@@ -152,5 +162,8 @@ def get_run_dir() -> Path:
     """
     today = datetime.now().strftime("%Y-%m-%d")
     run_dir = config.RUNS_DIR / today
-    run_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        run_dir.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        pass  # Skip on read-only filesystems (Vercel)
     return run_dir

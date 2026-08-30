@@ -374,11 +374,14 @@ def _apply_comprehensive_tech_assistant(user_msg: str, pkg: dict) -> tuple[str, 
 
 def _save_updated_package(pkg: dict) -> None:
     """Save updated package back to the daily output Markdown file."""
-    run_date = pkg.get("date") or get_latest_run_date() or datetime.now().strftime("%Y-%m-%d")
-    md_content = render_package_markdown(pkg)
-    file_path = config.RUNS_DIR / f"{run_date}.md"
-    file_path.write_text(md_content, encoding="utf-8")
-    logger.info("Saved updated package to %s", file_path)
+    try:
+        run_date = pkg.get("date") or get_latest_run_date() or datetime.now().strftime("%Y-%m-%d")
+        md_content = render_package_markdown(pkg)
+        file_path = config.RUNS_DIR / f"{run_date}.md"
+        file_path.write_text(md_content, encoding="utf-8")
+        logger.info("Saved updated package to %s", file_path)
+    except OSError:
+        logger.warning("Could not save package (read-only filesystem)")
 
 
 if __name__ == "__main__":
