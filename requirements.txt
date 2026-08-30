@@ -1,0 +1,22 @@
+# YouTube AI Automation Pipeline — Dependencies
+
+# AI / LLM
+anthropic>=0.34.0          # Claude API client
+
+# Data Fetching
+google-api-python-client>=2.100.0   # YouTube Data API v3
+praw>=7.7.0                # Reddit API wrapper
+feedparser>=6.0.0          # RSS feed parsing
+requests>=2.31.0           # HTTP requests
+
+# Text-to-Speech
+elevenlabs>=1.0.0          # ElevenLabs TTS API
+
+# Configuration
+python-dotenv>=1.0.0       # Load .env files
+
+# Scheduling
+schedule>=1.2.0            # Cron-like job scheduling
+
+# Utilities (stdlib — listed for documentation only)
+# json, os, pathlib, logging, datetime — all built-in

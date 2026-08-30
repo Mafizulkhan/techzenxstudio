@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechZenX Content Studio & AI Assistant</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- TechZenX Channel Logo Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/static/logo.svg">
+
+  <style>
+    :root {
+      --bg-dark: #070913;
+      --panel-bg: rgba(15, 23, 42, 0.75);
+      --card-bg: rgba(30, 41, 59, 0.6);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-cyan: #38bdf8;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.12) 0px, transparent 50%);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Top Header Bar ─────────────────────────────────────────── */
+    header {
+      height: 64px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.4), 0 0 8px rgba(255, 0, 43, 0.4);
+      object-fit: cover;
+      transition: transform 0.2s ease;
+    }
+
+    .brand-logo-img:hover {
+      transform: scale(1.06);
+    }
+
+    .brand-text h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #fff, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(30, 41, 59, 0.6);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--card-border);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .date-select {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #7c3aed);
+      color: #fff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+    }
+
+    /* ── Main Layout Container ─────────────────────────────────── */
+    .main-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      overflow: hidden;
+    }
+
+    /* ── Studio View Column ────────────────────────────────────── */
+    .studio-view {
+      overflow-y: auto;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ── Morning Top 2-3 Candidates Bar ──────────────────────── */
+    .candidates-section {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 18px 22px;
+    }
+
+    .candidates-heading {
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fbbf24;
+      margin-bottom: 14px;
+    }
+
+    .candidates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .candidate-card {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .candidate-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(56, 189, 248, 0.15);
+    }
+
+    .candidate-card.active {
+      border: 2px solid var(--accent-cyan);
+      background: rgba(14, 165, 233, 0.12);
+    }
+
+    .candidate-badge-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .rank-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    .rank-badge.winner {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      color: #000;
+    }
+
+    .candidate-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .candidate-action-btn {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── Topics Library Archive Section ──────────────────────── */
+    .archive-view {
+      overflow-y: auto;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .archive-header {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .archive-search-bar {
+      display: flex;
+      gap: 12px;
+    }
+
+    .search-input {
+      flex: 1;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-chip.active {
+      background: var(--accent-cyan);
+      color: #000;
+      font-weight: 700;
+      border-color: var(--accent-cyan);
+    }
+
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .archive-card {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .archive-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+    }
+
+    .archive-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .cat-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 10px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+    }
+
+    .date-badge {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .archive-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .archive-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .btn-open-topic {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-cyan);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-open-topic:hover {
+      background: var(--accent-cyan);
+      color: #000;
+    }
+
+    /* ── Package Header Card ───────────────────────────────────── */
+    .package-header-card {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+
+    .title-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .video-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+    }
+
+    .overview-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+    }
+
+    .overview-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .overview-val {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .section-heading {
+      font-family: 'Outfit', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .section-heading i {
+      color: var(--accent-cyan);
+    }
+
+    /* ── Scene Cards ────────────────────────────────────────────── */
+    .scenes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .scene-card {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      transition: border-color 0.2s ease;
+    }
+
+    .scene-card:hover {
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .scene-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .scene-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .scene-num {
+      width: 28px;
+      height: 28px;
+      background: var(--accent-purple);
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scene-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .scene-time {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    .scene-unified-block {
+      background: rgba(10, 15, 29, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .scene-line {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #e2e8f0;
+    }
+
+    .scene-label {
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .scene-flow {
+      background: rgba(56, 189, 248, 0.06);
+      border-left: 3px solid var(--accent-cyan);
+      padding: 10px 14px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    .scene-voice {
+      background: rgba(168, 85, 247, 0.08);
+      border-left: 3px solid var(--accent-purple);
+      padding: 10px 14px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-style: italic;
+      color: #f1f5f9;
+    }
+
+    .btn-copy-all {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-cyan);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-copy-all:hover {
+      background: var(--accent-cyan);
+      color: #000;
+    }
+
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-copy:hover {
+      background: var(--accent-cyan);
+      color: #000;
+    }
+
+    .card-block {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+
+    .alt-titles-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .alt-titles-list li {
+      font-size: 13px;
+      background: var(--card-bg);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--card-border);
+    }
+
+    .tags-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .tag-chip {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .prompt-box {
+      background: rgba(10, 15, 29, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-top: 8px;
+    }
+
+    .prompt-box-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ── Right Chatbot Assistant Column ────────────────────────── */
+    .chatbot-panel {
+      background: rgba(10, 14, 26, 0.95);
+      border-left: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .chat-header-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-status {
+      font-size: 11px;
+      color: var(--accent-green);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chat-status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-green);
+    }
+
+    .chat-messages {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg {
+      max-width: 90%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+      word-wrap: break-word;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
+    .msg-bot {
+      align-self: flex-start;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #f1f5f9;
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #0284c7, #6366f1);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .quick-chips {
+      padding: 12px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      border-top: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.5);
+      flex-shrink: 0;
+    }
+
+    .chip-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chip-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .chat-input-area {
+      padding: 16px 20px;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      resize: none;
+      height: 42px;
+    }
+
+    .chat-input:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .btn-send {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #22c55e;
+      color: #000;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header>
+    <div class="brand">
+      <img src="/static/logo.svg" alt="TechZenX Logo" class="brand-logo-img">
+      <div class="brand-text">
+        <h1>TechZenX Studio</h1>
+        <p>Daily Viral Tech Topics & AI Video Script Studio</p>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" id="tabStudio" onclick="switchView('studio')">
+        <i class="fa-solid fa-film"></i> Active Studio Package
+      </button>
+      <button class="tab-btn" id="tabArchive" onclick="switchView('archive')">
+        <i class="fa-solid fa-book-bookmark"></i> All Topics Library (<span id="totalTopicsCount">0</span>)
+      </button>
+    </div>
+
+    <div class="header-actions">
+      <select id="runDateSelect" class="date-select" onchange="loadRunDate(this.value)">
+        <option value="latest">Today's Daily Run</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Main Grid Layout -->
+  <div class="main-container">
+    
+    <!-- View 1: Studio Package View -->
+    <main class="studio-view" id="studioView">
+      
+      <!-- Morning Top 2-3 Daily Candidates Section -->
+      <section class="candidates-section">
+        <div class="candidates-heading">
+          <i class="fa-solid fa-fire"></i> Daily Morning Top 2-3 Viral Tech Candidates
+        </div>
+        <div class="candidates-grid" id="candidatesGrid">
+          <!-- Candidate cards injected dynamically -->
+        </div>
+      </section>
+
+      <!-- Video Overview Card -->
+      <div class="package-header-card">
+        <span class="title-badge"><i class="fa-solid fa-video"></i> 45-60s YouTube Short • Hinglish</span>
+        <h2 class="video-title" id="pkgTitle">Loading Content Package...</h2>
+        
+        <div class="overview-grid">
+          <div class="overview-item">
+            <div class="overview-label"><i class="fa-regular fa-clock"></i> Duration</div>
+            <div class="overview-val" id="ovDuration">~45-60 Seconds</div>
+          </div>
+          <div class="overview-item">
+            <div class="overview-label"><i class="fa-solid fa-mobile-screen"></i> Format</div>
+            <div class="overview-val" id="ovFormat">Vertical 9:16</div>
+          </div>
+          <div class="overview-item">
+            <div class="overview-label"><i class="fa-solid fa-wand-magic-sparkles"></i> Visual Style</div>
+            <div class="overview-val" id="ovStyle">Loading...</div>
+          </div>
+          <div class="overview-item">
+            <div class="overview-label"><i class="fa-solid fa-music"></i> BGM Mood</div>
+            <div class="overview-val" id="ovBgm">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene-by-Scene List -->
+      <div>
+        <div class="section-heading">
+          <i class="fa-solid fa-film"></i> Scene-by-Scene Video & Voiceover Prompts
+        </div>
+        <div class="scenes-list" id="scenesContainer">
+          <!-- Scenes injected dynamically -->
+        </div>
+      </div>
+
+      <!-- Titles & SEO Metadata -->
+      <div class="card-block">
+        <div class="section-heading">
+          <i class="fa-solid fa-hashtag"></i> Best Titles, Description & Tags
+        </div>
+        <p style="font-size: 12px; color: var(--text-muted);">Best YouTube Shorts Title:</p>
+        <h3 id="bestTitle" style="font-size: 18px; margin-bottom: 12px; color: var(--accent-cyan);">--</h3>
+
+        <p style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Alternative Titles:</p>
+        <ul class="alt-titles-list" id="altTitlesList"></ul>
+
+        <div style="margin-top: 14px;">
+          <p style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Description:</p>
+          <p id="pkgDesc" style="font-size: 13px; background: var(--card-bg); padding: 10px 14px; border-radius: 8px; margin-top: 6px; white-space: pre-line; line-height: 1.5;"></p>
+        </div>
+
+        <div style="margin-top: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <p style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Tags:</p>
+            <button class="btn-copy" onclick="copyTags()"><i class="fa-regular fa-copy"></i> Copy All Tags</button>
+          </div>
+          <div class="tags-cloud" id="tagsContainer"></div>
+        </div>
+      </div>
+
+      <!-- Thumbnail Prompt Card -->
+      <div class="card-block">
+        <div class="section-heading">
+          <i class="fa-solid fa-image"></i> Thumbnail Image Prompt (Google Flow / Midjourney)
+        </div>
+        
+        <div class="prompt-box">
+          <div class="prompt-box-label">
+            <span>Google Flow Prompt (Vertical 9:16)</span>
+            <button class="btn-copy" onclick="copyText('thumbPromptText', this)"><i class="fa-regular fa-copy"></i> Copy Prompt</button>
+          </div>
+          <div class="prompt-text" id="thumbPromptText">--</div>
+        </div>
+
+        <div style="font-size: 13px; margin-top: 10px;">
+          <span style="color: var(--text-muted);">Text Overlay Concept:</span> 
+          <strong id="thumbTextOverlay" style="color: var(--accent-cyan); text-transform: uppercase;">--</strong>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- View 2: All Previous Topics Archive Library View -->
+    <main class="archive-view hidden" id="archiveView">
+      <div class="archive-header">
+        <div class="section-heading" style="margin-bottom:0;">
+          <i class="fa-solid fa-book-bookmark"></i> All Previous Topics & Trends Archive
+        </div>
+        
+        <div class="archive-search-bar">
+          <input type="text" id="topicSearchInput" class="search-input" placeholder="🔍 Search past topics by keyword (e.g. GaN, Robotics, Quantum, AI)..." oninput="filterArchiveTopics()">
+        </div>
+
+        <div class="filter-chips" id="filterChips">
+          <button class="filter-chip active" onclick="filterArchiveCategory('all', this)">All Topics</button>
+          <button class="filter-chip" onclick="filterArchiveCategory('winner', this)">👑 Daily Winners</button>
+          <button class="filter-chip" onclick="filterArchiveCategory('candidate', this)">🔥 Candidates</button>
+          <button class="filter-chip" onclick="filterArchiveCategory('rss', this)">📰 News / RSS</button>
+          <button class="filter-chip" onclick="filterArchiveCategory('youtube', this)">▶ YouTube</button>
+          <button class="filter-chip" onclick="filterArchiveCategory('reddit', this)">💬 Reddit</button>
+        </div>
+      </div>
+
+      <div class="archive-grid" id="archiveGrid">
+        <!-- Archive cards injected dynamically -->
+      </div>
+    </main>
+
+    <!-- Right Column: General Tech & Script AI Chatbot Assistant -->
+    <aside class="chatbot-panel">
+      <div class="chat-header">
+        <div class="chat-header-title">
+          <img src="/static/logo.svg" alt="TZX Logo" style="width:24px;height:24px;border-radius:50%;object-fit:cover;"> TechZenX Assistant
+        </div>
+        <div class="chat-status">
+          <div class="chat-status-dot"></div> AI Ready
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg msg-bot">
+          Namaste! I am your TechZenX AI Assistant. Ask me anything about AI tools, robotics, space, tech breakthroughs, science facts, or to customize your video script package!
+        </div>
+      </div>
+
+      <!-- Quick Chips -->
+      <div class="quick-chips">
+        <button class="chip-btn" onclick="sendQuickChat('🚀 How to grow TechZenX YouTube channel fast?')">🚀 YouTube Strategy</button>
+        <button class="chip-btn" onclick="sendQuickChat('🤖 Humanoid AI Robotics trends')">🤖 Robotics</button>
+        <button class="chip-btn" onclick="sendQuickChat('🌌 Mind-blowing Space & Cosmos facts')">🌌 Space</button>
+        <button class="chip-btn" onclick="sendQuickChat('⚡ Top trending AI tools this week')">⚡ AI Tools</button>
+        <button class="chip-btn" onclick="sendQuickChat('📝 Write a 60s Shorts script idea')">📝 Script Idea</button>
+        <button class="chip-btn" onclick="sendQuickChat('⚡ Make opening hook more shocking')">⚡ Shocking Hook</button>
+      </div>
+
+      <div class="chat-input-area">
+        <textarea id="chatInput" class="chat-input" placeholder="Ask AI about tech, AI, space, robotics, or edit script..." onkeydown="handleKeyDown(event)"></textarea>
+        <button class="btn-send" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </aside>
+
+  </div>
+
+  <div class="toast" id="toast">Copied to Clipboard!</div>
+
+  <script>
+    let currentPackage = null;
+    let activeCandidateId = null;
+    let allArchiveTopics = [];
+    let activeCategoryFilter = 'all';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchDailyCandidates();
+      fetchPackage('latest');
+      fetchAvailableRuns();
+      fetchTopicsArchive();
+    });
+
+    function switchView(viewName) {
+      const studioView = document.getElementById('studioView');
+      const archiveView = document.getElementById('archiveView');
+      const tabStudio = document.getElementById('tabStudio');
+      const tabArchive = document.getElementById('tabArchive');
+
+      if (viewName === 'archive') {
+        studioView.classList.add('hidden');
+        archiveView.classList.remove('hidden');
+        tabStudio.classList.remove('active');
+        tabArchive.classList.add('active');
+      } else {
+        archiveView.classList.add('hidden');
+        studioView.classList.remove('hidden');
+        tabArchive.classList.remove('active');
+        tabStudio.classList.add('active');
+      }
+    }
+
+    async function fetchDailyCandidates() {
+      try {
+        const res = await fetch('/api/candidates');
+        const data = await res.json();
+        renderCandidatesGrid(data.candidates || []);
+      } catch (err) {
+        console.error('Error fetching candidates:', err);
+      }
+    }
+
+    function renderCandidatesGrid(candidates) {
+      const grid = document.getElementById('candidatesGrid');
+      grid.innerHTML = '';
+      candidates.forEach(cand => {
+        const isWinner = cand.is_winner;
+        const card = document.createElement('div');
+        card.className = `candidate-card ${cand.id === activeCandidateId || (activeCandidateId === null && isWinner) ? 'active' : ''}`;
+        card.onclick = () => loadCandidatePackage(cand);
+        
+        card.innerHTML = `
+          <div>
+            <div class="candidate-badge-row">
+              <span class="rank-badge ${isWinner ? 'winner' : ''}">
+                ${isWinner ? '👑 #1 VIRAL WINNER' : `#${cand.rank} CANDIDATE`}
+              </span>
+              <span style="font-size:11px;color:var(--text-muted);">Score: ${cand.score}</span>
+            </div>
+            <div class="candidate-title">${cand.title}</div>
+          </div>
+          <div class="candidate-action-btn">
+            <span>View Full 5-Scene Package</span> <i class="fa-solid fa-arrow-right"></i>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    async function loadCandidatePackage(cand) {
+      activeCandidateId = cand.id;
+      switchView('studio');
+      const res = await fetch(`/api/package?file=${cand.file}`);
+      const data = await res.json();
+      if (data.package) {
+        currentPackage = data.package;
+        renderPackageUI(currentPackage);
+        fetchDailyCandidates();
+      }
+    }
+
+    async function fetchTopicsArchive() {
+      try {
+        const res = await fetch('/api/topics-archive');
+        const data = await res.json();
+        allArchiveTopics = data.topics || [];
+        document.getElementById('totalTopicsCount').innerText = allArchiveTopics.length;
+        renderArchiveGrid(allArchiveTopics);
+      } catch (err) {
+        console.error('Error fetching archive topics:', err);
+      }
+    }
+
+    function renderArchiveGrid(topics) {
+      const grid = document.getElementById('archiveGrid');
+      grid.innerHTML = '';
+      if (topics.length === 0) {
+        grid.innerHTML = '<div style="color:var(--text-muted);font-size:13px;">No topics found in archive.</div>';
+        return;
+      }
+
+      topics.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'archive-card';
+        card.innerHTML = `
+          <div>
+            <div class="archive-meta">
+              <span class="cat-badge">${t.category}</span>
+              <span class="date-badge">${t.date}</span>
+            </div>
+            <div class="archive-title">${t.title}</div>
+            <div class="archive-desc">${t.description || 'No summary available.'}</div>
+          </div>
+          <button class="btn-open-topic" onclick="openArchiveTopic('${t.file}', '${t.title}')">
+            <i class="fa-solid fa-folder-open"></i> ${t.is_package ? 'Open Full Script Package' : 'Generate Video Package'}
+          </button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterArchiveCategory(cat, btnEl) {
+      activeCategoryFilter = cat;
+      document.querySelectorAll('#filterChips .filter-chip').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+      filterArchiveTopics();
+    }
+
+    function filterArchiveTopics() {
+      const query = document.getElementById('topicSearchInput').value.toLowerCase().trim();
+      let filtered = allArchiveTopics.filter(t => {
+        const matchesCategory = (activeCategoryFilter === 'all') || (t.source_type === activeCategoryFilter);
+        const matchesQuery = !query || t.title.toLowerCase().includes(query) || (t.description && t.description.toLowerCase().includes(query));
+        return matchesCategory && matchesQuery;
+      });
+      renderArchiveGrid(filtered);
+    }
+
+    async function openArchiveTopic(file, title) {
+      switchView('studio');
+      const res = await fetch(`/api/package?file=${file}`);
+      const data = await res.json();
+      if (data.package) {
+        currentPackage = data.package;
+        renderPackageUI(currentPackage);
+        showToast(`Loaded Package: ${title.substring(0, 30)}...`);
+      }
+    }
+
+    async function fetchAvailableRuns() {
+      try {
+        const res = await fetch('/api/runs');
+        const data = await res.json();
+        const select = document.getElementById('runDateSelect');
+        if (data.runs && data.runs.length > 0) {
+          select.innerHTML = '<option value="latest">Today\'s Daily Run</option>';
+          data.runs.forEach(run => {
+            select.innerHTML += `<option value="${run.date}">${run.date}</option>`;
+          });
+        }
+      } catch (err) {
+        console.error('Error loading runs:', err);
+      }
+    }
+
+    async function fetchPackage(date = 'latest') {
+      try {
+        const res = await fetch(`/api/package?date=${date}`);
+        const data = await res.json();
+        if (data.package) {
+          currentPackage = data.package;
+          renderPackageUI(currentPackage);
+        }
+      } catch (err) {
+        console.error('Error fetching package:', err);
+      }
+    }
+
+    function renderPackageUI(pkg) {
+      document.getElementById('pkgTitle').innerText = pkg.title || 'TechZenX Content Package';
+      document.getElementById('ovDuration').innerText = pkg.overview?.target_duration || '~45-60 Seconds';
+      document.getElementById('ovFormat').innerText = pkg.overview?.format || 'Vertical 9:16';
+      document.getElementById('ovStyle').innerText = pkg.overview?.visual_style || 'Cinematic 3D Visualization';
+      document.getElementById('ovBgm').innerText = pkg.overview?.bgm || 'Fast-paced synthwave';
+
+      const scenesContainer = document.getElementById('scenesContainer');
+      scenesContainer.innerHTML = '';
+      (pkg.scenes || []).forEach(sc => {
+        const sceneEl = document.createElement('div');
+        sceneEl.className = 'scene-card';
+        const fullSceneText = `Scene ${sc.number}: ${sc.name} (${sc.timestamp})\nCamera Angle & Motion: ${sc.camera_angle}\nSFX: ${sc.sfx}\nGoogle Flow Prompt: ${sc.flow_prompt}\nVoiceover (Hinglish): "${sc.voiceover}"`;
+
+        sceneEl.innerHTML = `
+          <div class="scene-card-header">
+            <div class="scene-title-group">
+              <div class="scene-num">${sc.number}</div>
+              <div class="scene-name">${sc.name}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="scene-time">${sc.timestamp}</div>
+              <button class="btn-copy-all" onclick="copySceneAll(${sc.number}, this)"><i class="fa-regular fa-copy"></i> Copy All</button>
+            </div>
+          </div>
+          <div class="scene-unified-block">
+            <div class="scene-line"><span class="scene-label">🎥 Camera Angle & Motion:</span> ${sc.camera_angle}</div>
+            <div class="scene-line"><span class="scene-label">🔊 SFX:</span> ${sc.sfx}</div>
+            <div class="scene-line scene-flow"><span class="scene-label">📐 Google Flow Prompt:</span> ${sc.flow_prompt}</div>
+            <div class="scene-line scene-voice"><span class="scene-label">🗣️ Voiceover (Hinglish):</span> "${sc.voiceover}"</div>
+          </div>
+        `;
+        sceneEl.dataset.fullText = fullSceneText;
+        scenesContainer.appendChild(sceneEl);
+      });
+
+      document.getElementById('bestTitle').innerText = pkg.metadata?.best_title || pkg.title;
+      const altList = document.getElementById('altTitlesList');
+      altList.innerHTML = '';
+      (pkg.metadata?.alt_titles || []).forEach(alt => {
+        altList.innerHTML += `<li>${alt}</li>`;
+      });
+
+      document.getElementById('pkgDesc').innerText = pkg.metadata?.description || '';
+
+      const tagsContainer = document.getElementById('tagsContainer');
+      tagsContainer.innerHTML = '';
+      (pkg.metadata?.tags || []).forEach(t => {
+        tagsContainer.innerHTML += `<span class="tag-chip">${t}</span>`;
+      });
+
+      document.getElementById('thumbPromptText').innerText = pkg.thumbnail?.prompt || '--';
+      document.getElementById('thumbTextOverlay').innerText = pkg.thumbnail?.text_overlay || '--';
+    }
+
+    function loadRunDate(date) {
+      switchView('studio');
+      fetchPackage(date);
+    }
+
+    async function triggerNewRun() {
+      const btn = event.currentTarget;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/run-pipeline', { method: 'POST' });
+        const data = await res.json();
+        if (data.status === 'completed') {
+          showToast('New Daily Content Package Ready!');
+          fetchDailyCandidates();
+          fetchTopicsArchive();
+          fetchPackage('latest');
+        }
+      } catch (err) {
+        showToast('Pipeline execution error');
+      } finally {
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> Run Daily Pipeline';
+        btn.disabled = false;
+      }
+    }
+
+    function copyText(elementId, btnEl) {
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btnEl.innerHTML;
+        btnEl.innerHTML = '<i class="fa-solid fa-check" style="color:#22c55e;"></i> Copied!';
+        setTimeout(() => { btnEl.innerHTML = original; }, 1800);
+        showToast('Copied to Clipboard!');
+      });
+    }
+
+    function copySceneAll(sceneNum, btnEl) {
+      const sceneCard = btnEl.closest('.scene-card');
+      const fullText = sceneCard?.dataset?.fullText || '';
+      if (!fullText) return;
+
+      navigator.clipboard.writeText(fullText).then(() => {
+        const original = btnEl.innerHTML;
+        btnEl.innerHTML = '<i class="fa-solid fa-check" style="color:#22c55e;"></i> Copied!';
+        setTimeout(() => { btnEl.innerHTML = original; }, 1800);
+        showToast(`Scene ${sceneNum} — Full Scene Copied!`);
+      });
+    }
+
+    function copyTags() {
+      if (!currentPackage?.metadata?.tags) return;
+      const tagsStr = currentPackage.metadata.tags.join(', ');
+      navigator.clipboard.writeText(tagsStr).then(() => {
+        showToast('All Tags Copied!');
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 2200);
+    }
+
+    function handleKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+
+    function sendQuickChat(msgText) {
+      document.getElementById('chatInput').value = msgText;
+      sendMessage();
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage(text, 'user');
+      input.value = '';
+
+      const botMsgEl = appendMessage('Thinking...', 'bot');
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, package: currentPackage })
+        });
+        const data = await res.json();
+        
+        botMsgEl.innerText = data.reply || 'Here is your response.';
+        if (data.updated_package) {
+          currentPackage = data.updated_package;
+          renderPackageUI(currentPackage);
+          showToast('Live Content Updated!');
+        }
+      } catch (err) {
+        botMsgEl.innerText = 'Sorry, there was an error processing your request.';
+      }
+    }
+
+    function appendMessage(text, sender) {
+      const msgs = document.getElementById('chatMessages');
+      const el = document.createElement('div');
+      el.className = `msg msg-${sender}`;
+      el.innerText = text;
+      msgs.appendChild(el);
+      msgs.scrollTop = msgs.scrollHeight;
+      return el;
+    }
+  </script>
+
+</body>
+</html>

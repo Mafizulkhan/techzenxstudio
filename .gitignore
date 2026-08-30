@@ -1,0 +1,38 @@
+# Secrets — NEVER commit
+.env
+
+# Generated output
+output/trends/
+output/scripts/
+output/shotlists/
+output/audio/
+output/runs/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
