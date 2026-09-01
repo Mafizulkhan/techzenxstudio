@@ -174,12 +174,17 @@
     .main-container {
       flex: 1;
       display: grid;
-      grid-template-columns: 1fr 420px;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+      grid-template-areas: "content assistant";
+      min-height: 0;
       overflow: hidden;
     }
 
     /* ── Studio View Column ────────────────────────────────────── */
-    .studio-view {
+    .studio-view,
+    .archive-view {
+      grid-area: content;
+      min-width: 0;
       overflow-y: auto;
       padding: 24px 32px;
       display: flex;
@@ -698,6 +703,7 @@
 
     /* ── Right Chatbot Assistant Column ────────────────────────── */
     .chatbot-panel {
+      grid-area: assistant;
       background: rgba(10, 14, 26, 0.95);
       border-left: 1px solid var(--card-border);
       display: flex;
