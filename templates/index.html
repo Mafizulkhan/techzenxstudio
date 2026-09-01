@@ -891,27 +891,38 @@
     }
 
     @media (max-width: 560px) {
-      header { padding: 10px 12px; }
+      body { font-size: 14px; }
+      header { padding: 10px 12px; gap: 10px; }
+      .brand { min-width: 0; width: 100%; }
       .brand-logo-img { width: 36px; height: 36px; }
-      .brand-text h1 { font-size: 17px; }
-      .header-actions { width: 100%; }
-      .header-actions .date-select { flex: 1; min-width: 0; }
-      .header-actions .btn-primary { flex: 1; justify-content: center; min-height: 42px; }
-      .studio-view, .archive-view { padding: 12px; }
+      .brand-text { min-width: 0; }
+      .brand-text h1 { font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .header-actions { width: 100%; gap: 8px; }
+      .header-actions .date-select { flex: 1; min-width: 0; min-height: 42px; }
+      .header-actions .btn-primary { flex: 1; justify-content: center; min-height: 42px; padding-inline: 12px; }
+      .nav-tabs { width: 100%; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+      .nav-tabs::-webkit-scrollbar { display: none; }
+      .tab-btn { min-height: 42px; padding: 8px 12px; white-space: nowrap; }
+      .studio-view, .archive-view { padding: 12px; gap: 14px; }
       .candidates-section, .archive-header, .package-header-card, .scene-card, .card-block { padding: 16px; border-radius: var(--radius-md); }
-      .candidates-grid, .archive-grid, .overview-grid { grid-template-columns: 1fr; }
-      .archive-search-bar { flex-direction: column; }
-      .search-input { min-height: 42px; }
+      .candidates-grid, .archive-grid, .overview-grid { grid-template-columns: 1fr; gap: 12px; }
+      .section-title, .archive-title { font-size: 16px; line-height: 1.35; }
+      .video-title { font-size: 18px; line-height: 1.35; }
+      .archive-search-bar { flex-direction: column; align-items: stretch; gap: 8px; }
+      .search-input { width: 100%; min-height: 42px; }
+      .filter-row { display: flex; flex-wrap: wrap; gap: 8px; }
       .filter-chip, .btn-open-topic, .btn-copy-all { min-height: 38px; }
       .scene-card-header { flex-direction: column; }
       .scene-time { align-self: flex-start; }
-      .scene-unified-block { padding: 13px; }
+      .scene-unified-block { padding: 13px; overflow-wrap: anywhere; }
+      .chatbot-panel { min-height: 480px; height: auto; }
       .chat-header { padding: 14px 16px; }
-      .chat-messages { padding: 16px; }
+      .chat-messages { padding: 16px 12px; }
       .quick-chips { padding: 10px 12px; overflow-x: auto; flex-wrap: nowrap; }
       .chip-btn { flex: 0 0 auto; min-height: 36px; }
       .chat-input-area { padding: 12px; }
-      .chat-input { min-width: 0; }
+      .chat-input { min-width: 0; font-size: 14px; }
+      .btn-send { flex: 0 0 42px; }
       .toast { width: calc(100% - 24px); text-align: center; bottom: 12px; }
     }
   </style>
