@@ -881,8 +881,8 @@
       .tab-btn { flex: 1 0 auto; justify-content: center; min-height: 40px; }
       .header-actions { margin-left: auto; }
       .main-container { display: flex; flex-direction: column; overflow: visible; }
-      .studio-view, .archive-view { overflow: visible; padding: 16px; gap: 16px; }
-      .chatbot-panel { min-height: 520px; height: 70vh; border-left: 0; border-top: 1px solid var(--card-border); }
+      .studio-view, .archive-view { order: 1; overflow: visible; padding: 16px; gap: 16px; }
+      .chatbot-panel { order: 2; width: 100%; min-height: 520px; height: 70vh; border-left: 0; border-top: 1px solid var(--card-border); }
       .candidates-grid, .archive-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .video-title { font-size: 21px; }
       .scene-card-header { align-items: flex-start; gap: 12px; }
