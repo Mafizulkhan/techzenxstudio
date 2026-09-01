@@ -862,6 +862,58 @@
     .toast.show {
       transform: translateX(-50%) translateY(0);
     }
+
+    /* ── Responsive layouts ─────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      header { padding: 0 16px; }
+      .main-container { grid-template-columns: minmax(0, 1fr) 340px; }
+      .studio-view, .archive-view { padding: 20px; }
+      .brand-text p { display: none; }
+      .header-actions { gap: 8px; }
+      .date-select { padding: 8px 10px; }
+    }
+
+    @media (max-width: 820px) {
+      body { height: auto; min-height: 100vh; overflow: auto; }
+      header { min-height: 64px; height: auto; flex-wrap: wrap; gap: 12px; padding: 12px 16px; }
+      .brand { flex: 1 1 auto; min-width: 190px; }
+      .nav-tabs { order: 3; width: 100%; overflow-x: auto; justify-content: stretch; }
+      .tab-btn { flex: 1 0 auto; justify-content: center; min-height: 40px; }
+      .header-actions { margin-left: auto; }
+      .main-container { display: flex; flex-direction: column; overflow: visible; }
+      .studio-view, .archive-view { overflow: visible; padding: 16px; gap: 16px; }
+      .chatbot-panel { min-height: 520px; height: 70vh; border-left: 0; border-top: 1px solid var(--card-border); }
+      .candidates-grid, .archive-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .video-title { font-size: 21px; }
+      .scene-card-header { align-items: flex-start; gap: 12px; }
+      .scene-title-group { min-width: 0; }
+      .scene-name { overflow-wrap: anywhere; }
+    }
+
+    @media (max-width: 560px) {
+      header { padding: 10px 12px; }
+      .brand-logo-img { width: 36px; height: 36px; }
+      .brand-text h1 { font-size: 17px; }
+      .header-actions { width: 100%; }
+      .header-actions .date-select { flex: 1; min-width: 0; }
+      .header-actions .btn-primary { flex: 1; justify-content: center; min-height: 42px; }
+      .studio-view, .archive-view { padding: 12px; }
+      .candidates-section, .archive-header, .package-header-card, .scene-card, .card-block { padding: 16px; border-radius: var(--radius-md); }
+      .candidates-grid, .archive-grid, .overview-grid { grid-template-columns: 1fr; }
+      .archive-search-bar { flex-direction: column; }
+      .search-input { min-height: 42px; }
+      .filter-chip, .btn-open-topic, .btn-copy-all { min-height: 38px; }
+      .scene-card-header { flex-direction: column; }
+      .scene-time { align-self: flex-start; }
+      .scene-unified-block { padding: 13px; }
+      .chat-header { padding: 14px 16px; }
+      .chat-messages { padding: 16px; }
+      .quick-chips { padding: 10px 12px; overflow-x: auto; flex-wrap: nowrap; }
+      .chip-btn { flex: 0 0 auto; min-height: 36px; }
+      .chat-input-area { padding: 12px; }
+      .chat-input { min-width: 0; }
+      .toast { width: calc(100% - 24px); text-align: center; bottom: 12px; }
+    }
   </style>
 </head>
 <body>
